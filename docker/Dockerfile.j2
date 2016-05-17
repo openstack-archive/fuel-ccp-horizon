@@ -1,0 +1,32 @@
+FROM {{ namespace }}/openstack-base:{{ tag }}
+MAINTAINER {{ maintainer }}
+
+RUN apt-get update \
+    && apt-get install --no-install-recommends -q -y -o Dpkg::Options::="--force-confdef" -o Dpkg::Options::="--force-confold" \
+        apache2 \
+        libapache2-mod-wsgi \
+    && ln -s ../mods-available/headers.load /etc/apache2/mods-enabled/headers.load
+
+RUN curl -o horizon-{{ branch }}.tar.gz http://tarballs.openstack.org/horizon/horizon-{{ branch }}.tar.gz \
+    && tar -zxvf horizon-{{ branch }}.tar.gz
+
+ADD openstach-dashboard.conf /etc/apache2/conf-enabled/openstack-dashboard.conf
+ADD local_settings /etc/openstack-dashboard/local_settings
+
+RUN mv horizon*/ horizon-{{ branch }}/ \
+    && mkdir -p /etc/openstack-dashboard /home/horizon /var/www/cgi-bin/horizon \
+    && /var/lib/microservices/venv/bin/pip --no-cache-dir install --upgrade -c /horizon-{{ branch }}/requirements.txt /horizon-{{ branch  }} \
+    && useradd --user-group horizon \
+    && ln -s /etc/openstack-dashboard/local_settings /var/lib/microservices/venv/lib/python2.7/site-packages/openstack_dashboard/local/local_settings.py \
+    && cp -r /horizon-source/openstack_dashboard/conf/* /etc/openstack-dashboard/ \
+    && cp /horizon-{{ branch }}/manage.py /var/lib/microservices/venv/bin/manage.py \
+    && /var/lib/microservices/venv/bin/python /var/lib/microservices/venv/bin/manage.py collectstatic --noinput --clear \
+    && chown -R horizon: /etc/openstack-dashboard /home/horizon /var/lib/microservices/venv/lib/python2.7/site-packages/static /horizon-{{ branch }}
+
+COPY start.sh /usr/local/bin/start.sh
+RUN chmod 755 /usr/local/bin/start.sh
+CMD ["/usr/local/bin/start.sh"]
+
+EXPOSE 80
+
+ENV PATH /var/lib/venv/bin:$PATH
