@@ -11,6 +11,8 @@ spec:
       env:
         - name: KEYSTONE_ADDRESS
           value: keystone-service.default.svc.cluster.local
+        - name: HORIZON_SECRET_KEY
+          value: secret
       imagePullPolicy: Always
       ports:
         - containerPort: 80
