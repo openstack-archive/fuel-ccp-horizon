@@ -1,10 +1,12 @@
 FROM {{ namespace }}/openstack-base:{{ tag }}
 MAINTAINER {{ maintainer }}
 
+#netcat is for test whether keystone is alive
 RUN apt-get update \
     && apt-get install --no-install-recommends -q -y -o Dpkg::Options::="--force-confdef" -o Dpkg::Options::="--force-confold" \
         apache2 \
         libapache2-mod-wsgi \
+        netcat \
     && ln -s ../mods-available/headers.load /etc/apache2/mods-enabled/headers.load
 
 RUN curl -o horizon-{{ branch }}.tar.gz http://tarballs.openstack.org/horizon/horizon-{{ branch }}.tar.gz \
@@ -18,7 +20,7 @@ RUN mv horizon*/ horizon-{{ branch }}/ \
     && /var/lib/microservices/venv/bin/pip --no-cache-dir install --upgrade -c /horizon-{{ branch }}/requirements.txt /horizon-{{ branch  }} \
     && useradd --user-group horizon \
     && ln -s /etc/openstack-dashboard/local_settings /var/lib/microservices/venv/lib/python2.7/site-packages/openstack_dashboard/local/local_settings.py \
-    && cp -r /horizon-source/openstack_dashboard/conf/* /etc/openstack-dashboard/ \
+    && cp -r /horizon-{{ branch }}/openstack_dashboard/conf/* /etc/openstack-dashboard/ \
     && cp /horizon-{{ branch }}/manage.py /var/lib/microservices/venv/bin/manage.py \
     && /var/lib/microservices/venv/bin/python /var/lib/microservices/venv/bin/manage.py collectstatic --noinput --clear \
     && chown -R horizon: /etc/openstack-dashboard /home/horizon /var/lib/microservices/venv/lib/python2.7/site-packages/static /horizon-{{ branch }}
