@@ -5,9 +5,9 @@
 
 source /etc/apache2/envvars
 
-sed -i "s/Secret_String/${HORIZON_SECRET_KEY}" \
+sed -i "s/Secret_String/${HORIZON_SECRET_KEY}/g" \
     /etc/openstack-dashboard/local_settings
-sed -i "s/KEYSTONE_ADDRESS/${KEYSTONE_ADDRESS}" \
+sed -i "s/KEYSTONE_ADDRESS/${KEYSTONE_ADDRESS}/g" \
     /etc/openstack-dashboard/local_settings
 
 #check does keyston is alive
