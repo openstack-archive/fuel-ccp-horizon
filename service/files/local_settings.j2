@@ -121,17 +121,17 @@ LOCAL_PATH = os.path.dirname(os.path.abspath(__file__))
 # (usually behind a load-balancer). Either you have to make sure that a session
 # gets all requests routed to the same dashboard instance or you set the same
 # SECRET_KEY for all of them.
-SECRET_KEY = 'Secret_String'
+SECRET_KEY = "{{ horizon_secret_key }}"
 
 # We recommend you use memcached for development; otherwise after every reload
 # of the django development server, you will have to login again. To use
 # memcached set CACHES to something like
-#CACHES = {
-#    'default': {
-#        'BACKEND': 'django.core.cache.backends.memcached.MemcachedCache',
-#        'LOCATION': '127.0.0.1:11211',
-#    },
-#}
+CACHES = {
+    'default': {
+        'BACKEND': 'django.core.cache.backends.memcached.MemcachedCache',
+        'LOCATION': 'memcached:{{ memcached_port }}',
+    },
+}
 
 CACHES = {'default': {'BACKEND': 'django.core.cache.backends.locmem.LocMemCache',},}
 
@@ -152,8 +152,8 @@ EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
 #    ('http://cluster2.example.com:5000/v2.0', 'cluster2'),
 #]
 
-OPENSTACK_HOST = "KEYSTONE_ADDRESS"
-OPENSTACK_KEYSTONE_URL = "http://%s:5000/v2.0" % OPENSTACK_HOST
+OPENSTACK_HOST = "keystone"
+OPENSTACK_KEYSTONE_URL = "http://%s:{{ keystone_public_port }}/v3" % OPENSTACK_HOST
 OPENSTACK_KEYSTONE_DEFAULT_ROLE = "_member_"
 
 # Enables keystone web single-sign-on if set to True.
@@ -226,8 +226,8 @@ OPENSTACK_KEYSTONE_BACKEND = {
 # Toggle LAUNCH_INSTANCE_LEGACY_ENABLED and LAUNCH_INSTANCE_NG_ENABLED to
 # determine the experience to enable.  Set them both to true to enable
 # both.
-#LAUNCH_INSTANCE_LEGACY_ENABLED = True
-#LAUNCH_INSTANCE_NG_ENABLED = False
+LAUNCH_INSTANCE_LEGACY_ENABLED = True
+LAUNCH_INSTANCE_NG_ENABLED = False
 
 # A dictionary of settings which can be used to provide the default values for
 # properties found in the Launch Instance modal.

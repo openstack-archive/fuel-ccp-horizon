@@ -1,7 +1,6 @@
 FROM {{ namespace }}/openstack-base:{{ tag }}
 MAINTAINER {{ maintainer }}
 
-#netcat is for test whether keystone is alive
 RUN apt-get update \
     && apt-get install --no-install-recommends -q -y -o Dpkg::Options::="--force-confdef" -o Dpkg::Options::="--force-confold" \
         apache2 \
@@ -10,9 +9,6 @@ RUN apt-get update \
 
 RUN curl -o horizon-{{ branch }}.tar.gz http://tarballs.openstack.org/horizon/horizon-{{ branch }}.tar.gz \
     && tar -zxvf horizon-{{ branch }}.tar.gz
-
-ADD openstach-dashboard.conf /etc/apache2/conf-enabled/openstack-dashboard.conf
-ADD local_settings /etc/openstack-dashboard/local_settings
 
 RUN mv horizon*/ horizon-{{ branch }}/ \
     && mkdir -p /etc/openstack-dashboard /home/horizon /var/www/cgi-bin/horizon \
@@ -24,10 +20,7 @@ RUN mv horizon*/ horizon-{{ branch }}/ \
     && /var/lib/microservices/venv/bin/python /var/lib/microservices/venv/bin/manage.py collectstatic --noinput --clear \
     && chown -R horizon: /etc/openstack-dashboard /home/horizon /var/lib/microservices/venv/lib/python2.7/site-packages/static /horizon-{{ branch }}
 
-COPY start.sh /usr/local/bin/start.sh
-RUN chmod 755 /usr/local/bin/start.sh
-CMD ["/usr/local/bin/start.sh"]
-
-EXPOSE 80
-
 ENV PATH /var/lib/venv/bin:$PATH
+
+COPY daemon.sh /usr/local/bin/daemon.sh
+RUN chmod 755 /usr/local/bin/daemon.sh

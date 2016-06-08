@@ -1,0 +1,3 @@
+configs:
+    horizon_port: 80
+    horizon_secret_key: secret
