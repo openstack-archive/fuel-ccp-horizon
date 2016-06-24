@@ -1,29 +1,31 @@
 service:
-    name: horizon
-    ports:
-        - horizon_port
-    container:
-        node-selector:
-            openstack-controller: "true"
-    probes:
+  name: horizon
+  ports:
+    - horizon_port
+  node-selector:
+    openstack-controller: "true"
+  containers:
+    - name: horizon
+      image: horizon
+      probes:
         readiness: "true"
         liveness: "true"
-    pre:
+      pre:
         - name: horizon-compress
           command: /var/lib/microservices/venv/bin/python /var/lib/microservices/venv/bin/manage.py compress --force
-    daemon:
+      daemon:
         dependencies:
-            - keystone
-            - memcached
+          - keystone
+          - memcached
         files:
-            - local-settings
-            - openstack-dashboard-conf
+          - horizon-local-settings
+          - openstack-dashboard-conf
         command: daemon.sh
 
 files:
-    local-settings:
-        path: /etc/openstack-dashboard/local_settings
-        content: local_settings.j2
-    openstack-dashboard-conf:
-        path: /etc/apache2/conf-enabled/openstack-dashboard.conf
-        content: openstack-dashboard.conf.j2
+  horizon-local-settings:
+    path: /etc/openstack-dashboard/local_settings
+    content: local_settings.j2
+  openstack-dashboard-conf:
+    path: /etc/apache2/conf-enabled/openstack-dashboard.conf
+    content: openstack-dashboard.conf.j2
