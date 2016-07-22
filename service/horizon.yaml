@@ -1,7 +1,8 @@
 service:
   name: horizon
   ports:
-    - horizon_port
+    - port: horizon_port
+      ingress: horizon_external_path
   node-selector:
     openstack-controller: "true"
   containers:
