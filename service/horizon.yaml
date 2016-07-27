@@ -2,8 +2,6 @@ service:
   name: horizon
   ports:
     - horizon_port
-  node-selector:
-    openstack-controller: "true"
   containers:
     - name: horizon
       image: horizon
