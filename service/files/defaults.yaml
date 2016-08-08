@@ -1,3 +1,5 @@
 configs:
     horizon_port: 80
+    horizon_node_port: 30000
+    horizon_theme: mirantis
     horizon_secret_key: secret
