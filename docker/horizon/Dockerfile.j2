@@ -11,6 +11,7 @@ RUN apt-get update \
 {{ copy_sources("openstack/sahara-dashboard", "/sahara-dashboard") }}
 {{ copy_sources("openstack/murano-dashboard", "/murano-dashboard") }}
 {{ copy_sources("openstack/searchlight-ui", "/searchlight-ui") }}
+{{ copy_sources("mirantis-theme", "/theme") }}
 
 RUN mkdir -p /etc/openstack-dashboard /home/horizon /var/www/cgi-bin/horizon \
     && cp -a /sahara-dashboard/sahara_dashboard/enabled/* /horizon/openstack_dashboard/local/enabled/ \
@@ -27,14 +28,12 @@ RUN mkdir -p /etc/openstack-dashboard /home/horizon /var/www/cgi-bin/horizon \
         cp -a /searchlight-ui/searchlight_ui/conf/searchlight_policy.json /horizon/openstack_dashboard/conf/; fi) \
     && (if [ -f /searchlight-ui/searchlight_ui/local_settings.d/_1001_search_settings.py ]; then \
         cp -a /searchlight-ui/searchlight_ui/local_settings.d/_1001_search_settings.py /horizon/openstack_dashboard/local/local_settings.d/; fi) \
+    && cp -r /theme/themes/vendor/ /horizon/openstack_dashboard/themes/ \
     && /var/lib/microservices/venv/bin/pip install --upgrade /horizon /sahara-dashboard /murano-dashboard /searchlight-ui \
     && useradd --user-group horizon \
     && ln -s /etc/openstack-dashboard/local_settings /var/lib/microservices/venv/lib/python2.7/site-packages/openstack_dashboard/local/local_settings.py \
     && cp -r /horizon/openstack_dashboard/conf/* /etc/openstack-dashboard/ \
-    && cp /horizon/manage.py /var/lib/microservices/venv/bin/manage.py \
-    && /var/lib/microservices/venv/bin/python /var/lib/microservices/venv/bin/manage.py collectstatic --noinput --clear \
-    && chown -R horizon: /etc/openstack-dashboard /home/horizon /var/lib/microservices/venv/lib/python2.7/site-packages/static /horizon \
-    && /var/lib/microservices/venv/bin/python /var/lib/microservices/venv/bin/manage.py compress --force
+    && cp /horizon/manage.py /var/lib/microservices/venv/bin/manage.py
 
 ENV PATH /var/lib/venv/bin:$PATH
 
