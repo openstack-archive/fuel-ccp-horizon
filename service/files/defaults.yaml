@@ -10,6 +10,8 @@ configs:
       processes: 6
       threads: 15
 
+    theme: mirantis
+
 sources:
   openstack/horizon:
     git_url: https://git.openstack.org/openstack/horizon.git
@@ -23,3 +25,6 @@ sources:
   openstack/searchlight-ui:
     git_url: https://git.openstack.org/openstack/searchlight-ui.git
     git_ref: stable/newton
+  mirantis-theme:
+    git_url: https://review.fuel-infra.org/openstack/horizon-vendor-theme
+    git_ref: 9.0/mitaka
