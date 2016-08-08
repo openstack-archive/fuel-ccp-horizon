@@ -1,0 +1,31 @@
+@import "../default/variables";
+
+
+/* Custom Variables */
+$brand-color: #ECF1F5;
+$navbar-height: 50px;
+$white: #fff;
+$black: #000;
+$mirantis-blue-gray: #ECF1F5;
+$base-gray: #DDE0E2;
+$lighten-base-gray: #EEF1F5;
+$mirantis-red: #d42f1a;
+
+$navbar-default-link-color: $white;
+$navbar-default-link-hover-color: $white;
+$navbar-default-link-hover-bg: #56575B;
+$navbar-default-link-active-color: $white;
+$navbar-default-link-active-bg: #d42f1a;
+$theme_url: $static_url + '/themes/vendor/';
+
+$brand-primary:      #305F90;
+$table-border-color: #dae4eb;
+$table-bg-accent:    #ecf1f5;
+
+$btn-primary-bg: $brand-primary;
+$btn-primary-border:#264C73;
+
+$pagination-active-bg: $brand-primary;
+$pagination-active-border:#264C73;
+$nav-pills-active-link-hover-bg:#4A5A82;
+$component-active-bg:#4A5A82;
