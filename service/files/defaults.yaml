@@ -1,9 +1,12 @@
 configs:
   horizon_port: 80
+  horizon_node_port: 30000
   horizon_secret_key: secret
 
   horizon_wsgi_processes: 6
   horizon_wsgi_threads: 15
+
+  horizon_theme: mirantis
 
 sources:
   openstack/horizon:

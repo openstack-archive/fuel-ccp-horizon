@@ -9,6 +9,9 @@ RUN apt-get update \
 
 {{ copy_sources("openstack/horizon", "/horizon") }}
 
+COPY vendor/ /var/lib/microservices/venv/local/lib/python2.7/site-packages/openstack_dashboard/themes/vendor/
+COPY _10_set_custom_theme.py /var/lib/microservices/venv/local/lib/python2.7/site-packages/openstack_dashboard/local/local_settings.d/
+
 RUN mkdir -p /etc/openstack-dashboard /home/horizon /var/www/cgi-bin/horizon \
     && /var/lib/microservices/venv/bin/pip --no-cache-dir install --upgrade -c /horizon/requirements.txt /horizon \
     && useradd --user-group horizon \
