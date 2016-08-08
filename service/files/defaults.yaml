@@ -2,10 +2,11 @@ configs:
   horizon:
     port: 80
     secret_key: secret
-
     wsgi:
       processes: 6
       threads: 15
+
+    theme: mirantis
 
 sources:
   openstack/horizon:
