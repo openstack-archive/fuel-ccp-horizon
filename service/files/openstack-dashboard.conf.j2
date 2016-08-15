@@ -1,15 +1,26 @@
-WSGIScriptAlias / /var/lib/microservices/venv/lib/python2.7/site-packages/openstack_dashboard/wsgi/django.wsgi
-WSGIScriptAlias /horizon /var/lib/microservices/venv/lib/python2.7/site-packages/openstack_dashboard/wsgi/django.wsgi
-WSGIDaemonProcess horizon user=horizon group=horizon processes=3 threads=10 python-path=/var/lib/microservices/venv/lib/python2.7/site-packages
-WSGIProcessGroup horizon
-Alias /static /var/lib/microservices/venv/local/lib/python2.7/site-packages/static
-<Directory /var/lib/microservices/venv/lib/python2.7/site-packages/openstack_dashboard/wsgi>
-  Order allow,deny
-  Allow from all
-  Require all granted
-</Directory>
-<Directory /var/lib/microservices/venv/local/lib/python2.7/site-packages/static>
-  Order allow,deny
-  Allow from all
-  Require all granted
-</Directory>
+{% set venv_path = '/var/lib/microservices/venv/lib/python2.7/site-packages' %}
+
+<VirtualHost *:{{ horizon_port }}>
+    WSGIScriptAlias / {{ venv_path }}/openstack_dashboard/wsgi/django.wsgi
+    WSGIScriptAlias /horizon {{ venv_path }}/openstack_dashboard/wsgi/django.wsgi
+    WSGIDaemonProcess horizon user=horizon group=horizon processes=3 threads=10 python-path={{ venv_path }}
+    WSGIProcessGroup horizon
+
+    Alias /static {{ venv_path }}/static
+
+    <Directory {{ venv_path }}/openstack_dashboard/wsgi>
+        Order allow,deny
+        Allow from all
+        Require all granted
+    </Directory>
+    <Directory {{ venv_path }}/static>
+        Order allow,deny
+        Allow from all
+        Require all granted
+    </Directory>
+
+    ErrorLogFormat "%{cu}t %-m:%-l %P:%T %M"
+    LogFormat "%{X-Forwarded-For}i %l %u %t \"%r\" %>s %b %D \"%{Referer}i\" \"%{User-Agent}i\"" access
+    ErrorLog  "{{ horizon_log_base }}/horizon-error.log"
+    CustomLog "{{ horizon_log_base }}/horizon-access.log" access
+</VirtualHost>

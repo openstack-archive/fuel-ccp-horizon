@@ -8,7 +8,14 @@ service:
       probes:
         readiness: "true"
         liveness: "true"
+      volumes:
+      - name: horizon-logs
+        path: "{{ horizon_log_base }}"
+        type: host
+        readOnly: False
       pre:
+        - name: chown-logs-dir
+          command: "sudo /bin/chown horizon:horizon {{ horizon_log_base }}"
         - name: horizon-compress
           command: /var/lib/microservices/venv/bin/python /var/lib/microservices/venv/bin/manage.py compress --force
       daemon:
