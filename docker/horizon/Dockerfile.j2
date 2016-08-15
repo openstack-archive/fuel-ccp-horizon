@@ -23,4 +23,6 @@ RUN mv horizon*/ horizon-{{ branch }}/ \
 ENV PATH /var/lib/venv/bin:$PATH
 
 COPY daemon.sh /usr/local/bin/daemon.sh
-RUN chmod 755 /usr/local/bin/daemon.sh
+COPY horizon_sudoers /etc/sudoers.d/horizon_sudoers
+RUN chmod 755 /usr/local/bin/daemon.sh \
+    && chmod 440 /etc/sudoers.d/horizon_sudoers
