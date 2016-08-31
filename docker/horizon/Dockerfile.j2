@@ -20,6 +20,9 @@ RUN mkdir -p /etc/openstack-dashboard /home/horizon /var/www/cgi-bin/horizon \
 
 ENV PATH /var/lib/venv/bin:$PATH
 
+# Workaround for https://bugs.launchpad.net/osprofiler/+bug/1361235
+RUN sed -i "s#'../..'#os.path.realpath('../..')#" /var/lib/microservices/venv/lib/python2.7/site-packages/openstack_dashboard/wsgi/django.wsgi
+
 COPY daemon.sh /usr/local/bin/daemon.sh
 COPY horizon_sudoers /etc/sudoers.d/horizon_sudoers
 RUN chmod 755 /usr/local/bin/daemon.sh \
