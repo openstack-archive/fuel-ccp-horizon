@@ -9,10 +9,10 @@ service:
         readiness: "true"
         liveness: "true"
       volumes:
-      - name: horizon-logs
-        path: "/var/log/ccp/horizon"
-        type: host
-        readOnly: False
+        - name: horizon-logs
+          path: "/var/log/ccp/horizon"
+          type: host
+          readOnly: False
       pre:
         - name: chown-logs-dir
           command: "sudo /bin/chown horizon:horizon /var/log/ccp/horizon"
