@@ -1,7 +1,7 @@
 service:
   name: horizon
   ports:
-    - {{ horizon_port }}
+    - {{ horizon_port }}:30000
   containers:
     - name: horizon
       image: horizon
