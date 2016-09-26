@@ -8,4 +8,4 @@ configs:
 sources:
   openstack/horizon:
     git_url: https://github.com/openstack/horizon.git
-    git_ref: master
+    git_ref: stable/newton
