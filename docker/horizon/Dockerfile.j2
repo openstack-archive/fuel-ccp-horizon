@@ -8,11 +8,14 @@ RUN apt-get update \
     && ln -s ../mods-available/headers.load /etc/apache2/mods-enabled/headers.load
 
 {{ copy_sources("openstack/horizon", "/horizon") }}
+{{ copy_sources("openstack/murano-dashboard", "/murano-dashboard") }}
 
 RUN mkdir -p /etc/openstack-dashboard /home/horizon /var/www/cgi-bin/horizon \
     && /var/lib/microservices/venv/bin/pip --no-cache-dir install --upgrade -c /horizon/requirements.txt /horizon \
+    && /var/lib/microservices/venv/bin/pip --no-cache-dir install --upgrade -c /murano-dashboard/requirements.txt /murano-dashboard \
     && useradd --user-group horizon \
     && ln -s /etc/openstack-dashboard/local_settings /var/lib/microservices/venv/lib/python2.7/site-packages/openstack_dashboard/local/local_settings.py \
+    && ln -s /etc/openstack-dasboard/murano_dashboard /var/lib/microservices/venv/lib/python2.7/site-packages/openstack_dashboard/local/enabled/_50_murano.py \
     && cp -r /horizon/openstack_dashboard/conf/* /etc/openstack-dashboard/ \
     && cp /horizon/manage.py /var/lib/microservices/venv/bin/manage.py \
     && /var/lib/microservices/venv/bin/python /var/lib/microservices/venv/bin/manage.py collectstatic --noinput --clear \

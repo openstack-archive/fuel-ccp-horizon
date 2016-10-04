@@ -9,3 +9,6 @@ sources:
   openstack/horizon:
     git_url: https://github.com/openstack/horizon.git
     git_ref: stable/newton
+  openstack/murano-dashboard:
+    git_url: http://git.openstack.org/openstack/murano-dashboard.git
+    git_ref: master
