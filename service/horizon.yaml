@@ -25,6 +25,9 @@ service:
         files:
           - horizon-local-settings
           - openstack-dashboard-conf
+          {% if enable_murano_dashboard %}
+          - murano-dashboard-conf
+          {% endif %}
         command: daemon.sh
 
 files:
@@ -34,3 +37,6 @@ files:
   openstack-dashboard-conf:
     path: /etc/apache2/conf-enabled/openstack-dashboard.conf
     content: openstack-dashboard.conf.j2
+  murano-dashboard-conf:
+    path: /etc/openstack-dasboard/murano_dashboard
+    content: murano_dashboard.j2
