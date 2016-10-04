@@ -9,22 +9,31 @@ RUN apt-get update \
 
 {{ copy_sources("openstack/horizon", "/horizon") }}
 {{ copy_sources("openstack/sahara-dashboard", "/sahara-dashboard") }}
+{{ copy_sources("openstack/murano-dashboard", "/murano-dashboard") }}
 
 RUN mkdir -p /etc/openstack-dashboard /home/horizon /var/www/cgi-bin/horizon \
-    && cp -a /sahara-dashboard/sahara_dashboard/enabled/* /horizon/openstack_dashboard/local/enabled/ \
-    && /var/lib/microservices/venv/bin/pip install --upgrade /horizon /sahara-dashboard \
+    && /var/lib/microservices/venv/bin/pip install --upgrade /horizon /sahara-dashboard /murano-dashboard \
     && useradd --user-group horizon \
     && ln -s /etc/openstack-dashboard/local_settings /var/lib/microservices/venv/lib/python2.7/site-packages/openstack_dashboard/local/local_settings.py \
     && cp -r /horizon/openstack_dashboard/conf/* /etc/openstack-dashboard/ \
+    && cp -a /sahara-dashboard/sahara_dashboard/enabled/* /horizon/openstack_dashboard/local/enabled/ \
+    && cp -r /murano-dashboard/muranodashboard/conf/* /var/lib/microservices/venv/lib/python2.7/site-packages/openstack_dashboard/conf/ \
+    && cp -a /murano-dashboard/muranodashboard/local/enabled/* /var/lib/microservices/venv/lib/python2.7/site-packages/openstack_dashboard/local/enabled/ \
+    && cp -a /murano-dashboard/muranodashboard/local/local_settings.d/* /var/lib/microservices/venv/lib/python2.7/site-packages/openstack_dashboard/local/local_settings.d/ \
     && cp /horizon/manage.py /var/lib/microservices/venv/bin/manage.py \
     && /var/lib/microservices/venv/bin/python /var/lib/microservices/venv/bin/manage.py collectstatic --noinput --clear \
     && chown -R horizon: /etc/openstack-dashboard /home/horizon /var/lib/microservices/venv/lib/python2.7/site-packages/static /horizon \
-    && /var/lib/microservices/venv/bin/python /var/lib/microservices/venv/bin/manage.py compress --force
+    && /var/lib/microservices/venv/bin/python /var/lib/microservices/venv/bin/manage.py compress --force \
+    && cd /home/horizon ; /var/lib/microservices/venv/bin/python /var/lib/microservices/venv/bin/manage.py migrate --noinput
 
 ENV PATH /var/lib/venv/bin:$PATH
 
 # Workaround for https://bugs.launchpad.net/osprofiler/+bug/1361235
 RUN sed -i "s#'../..'#os.path.realpath('../..')#" /var/lib/microservices/venv/lib/python2.7/site-packages/openstack_dashboard/wsgi/django.wsgi
+
+# TODO (amogylchenko): remove ugly sed for session_engine
+# Seems related to https://bugs.launchpad.net/murano/+bug/1465767
+RUN sed -i "s/^SESSION_ENGINE = .*/SESSION_ENGINE = 'django.contrib.sessions.backends.signed_cookies'/g" /var/lib/microservices/venv/lib/python2.7/site-packages/openstack_dashboard/local/local_settings.d/_50_murano.py
 
 COPY daemon.sh /usr/local/bin/daemon.sh
 COPY horizon_sudoers /etc/sudoers.d/horizon_sudoers
