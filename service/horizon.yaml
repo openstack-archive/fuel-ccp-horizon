@@ -18,6 +18,8 @@ service:
           command: "sudo /bin/chown horizon:horizon /var/log/ccp/horizon"
         - name: horizon-compress
           command: /var/lib/microservices/venv/bin/python /var/lib/microservices/venv/bin/manage.py compress --force
+        - name: horizon-migrate
+          command: cd /home/horizon/; sudo -u horizon /var/lib/microservices/venv/bin/python /var/lib/microservices/venv/bin/manage.py migrate --noinput
       daemon:
         dependencies:
           - keystone
@@ -25,6 +27,10 @@ service:
         files:
           - horizon-local-settings
           - openstack-dashboard-conf
+          # {% if enable_murano_dashboard %}
+          - murano-dashboard-conf
+          - murano-dashboard-settings
+          # {% endif %}
         command: daemon.sh
 
 files:
@@ -34,3 +40,9 @@ files:
   openstack-dashboard-conf:
     path: /etc/apache2/conf-enabled/openstack-dashboard.conf
     content: openstack-dashboard.conf.j2
+  murano-dashboard-conf:
+    path: /etc/openstack-dashboard/murano_dashboard
+    content: murano_dashboard.j2
+  murano-dashboard-settings:
+    path: /etc/openstack-dashboard/murano_dashboard_settings
+    content: murano_dashboard_settings.j2
