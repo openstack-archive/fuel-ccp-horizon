@@ -1,9 +1,11 @@
 configs:
-  horizon_port: 80
-  horizon_secret_key: secret
+  horizon:
+    port: 80
+    secret_key: secret
 
-  horizon_wsgi_processes: 6
-  horizon_wsgi_threads: 15
+    wsgi:
+      processes: 6
+      threads: 15
 
 sources:
   openstack/horizon:

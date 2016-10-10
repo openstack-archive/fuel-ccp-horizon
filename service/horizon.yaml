@@ -1,7 +1,7 @@
 service:
   name: horizon
   ports:
-    - {{ horizon_port }}
+    - {{ horizon.port }}
   containers:
     - name: horizon
       image: horizon

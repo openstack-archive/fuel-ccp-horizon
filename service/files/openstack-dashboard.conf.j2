@@ -1,9 +1,9 @@
 {% set venv_path = '/var/lib/microservices/venv/lib/python2.7/site-packages' %}
 
-<VirtualHost *:{{ horizon_port }}>
+<VirtualHost *:{{ horizon.port }}>
     WSGIScriptAlias / {{ venv_path }}/openstack_dashboard/wsgi/django.wsgi
     WSGIScriptAlias /horizon {{ venv_path }}/openstack_dashboard/wsgi/django.wsgi
-    WSGIDaemonProcess horizon user=horizon group=horizon processes={{ horizon_wsgi_processes }} threads={{ horizon_wsgi_threads }} python-path={{ venv_path }}
+    WSGIDaemonProcess horizon user=horizon group=horizon processes={{ horizon.wsgi.processes }} threads={{ horizon.wsgi.threads }} python-path={{ venv_path }}
     WSGIProcessGroup horizon
 
     Alias /static {{ venv_path }}/static
