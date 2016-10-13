@@ -12,7 +12,7 @@ RUN apt-get update \
 
 RUN mkdir -p /etc/openstack-dashboard /home/horizon /var/www/cgi-bin/horizon \
     && cp -a /sahara-dashboard/sahara_dashboard/enabled/* /horizon/openstack_dashboard/local/enabled/ \
-    && /var/lib/microservices/venv/bin/pip --no-cache-dir install --upgrade -c /horizon/requirements.txt -c /sahara-dashboard/requirements.txt /horizon /sahara-dashboard \
+    && /var/lib/microservices/venv/bin/pip install --upgrade /horizon /sahara-dashboard \
     && useradd --user-group horizon \
     && ln -s /etc/openstack-dashboard/local_settings /var/lib/microservices/venv/lib/python2.7/site-packages/openstack_dashboard/local/local_settings.py \
     && cp -r /horizon/openstack_dashboard/conf/* /etc/openstack-dashboard/ \
