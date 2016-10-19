@@ -1,6 +1,7 @@
 configs:
   horizon:
-    port: 80
+    port:
+      cont: 80
     secret_key: secret
 
     wsgi:

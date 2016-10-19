@@ -129,7 +129,7 @@ SECRET_KEY = "{{ horizon.secret_key }}"
 CACHES = {
     'default': {
         'BACKEND': 'django.core.cache.backends.memcached.MemcachedCache',
-        'LOCATION': '{{ address("memcached") }}:{{ memcached.port }}',
+        'LOCATION': '{{ address("memcached") }}:{{ memcached.port.cont }}',
     },
 }
 
@@ -151,7 +151,7 @@ EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
 #]
 
 OPENSTACK_HOST = "{{ address('keystone') }}"
-OPENSTACK_KEYSTONE_URL = "http://%s:{{ keystone.public_port }}/v3" % OPENSTACK_HOST
+OPENSTACK_KEYSTONE_URL = "http://%s:{{ keystone.public_port.cont }}/v3" % OPENSTACK_HOST
 OPENSTACK_KEYSTONE_DEFAULT_ROLE = "_member_"
 
 # Enables keystone web single-sign-on if set to True.
