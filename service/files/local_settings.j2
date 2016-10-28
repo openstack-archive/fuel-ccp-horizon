@@ -129,7 +129,7 @@ SECRET_KEY = "{{ horizon.secret_key }}"
 CACHES = {
     'default': {
         'BACKEND': 'django.core.cache.backends.memcached.MemcachedCache',
-        'LOCATION': '{{ address("memcached") }}:{{ memcached.port.cont }}',
+        'LOCATION': '{{ address("memcached", memcached.port, multiple=True, delimiter=";") }}',
     },
 }
 
