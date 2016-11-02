@@ -18,8 +18,6 @@ service:
       pre:
         - name: chown-logs-dir
           command: "sudo /bin/chown horizon:horizon /var/log/ccp/horizon"
-        - name: horizon-compress
-          command: /var/lib/microservices/venv/bin/python /var/lib/microservices/venv/bin/manage.py compress --force
       daemon:
         dependencies:
           - keystone
