@@ -19,6 +19,8 @@ service:
       pre:
         - name: chown-logs-dir
           command: "sudo /bin/chown horizon:horizon /var/log/ccp/horizon"
+        - name: horizon-compress  # Just for Mitaka compatibility
+          command: /var/lib/microservices/venv/bin/python /var/lib/microservices/venv/bin/manage.py compress
       daemon:
         dependencies:
           - keystone
