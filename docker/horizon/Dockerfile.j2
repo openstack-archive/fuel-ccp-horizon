@@ -19,7 +19,8 @@ RUN mkdir -p /etc/openstack-dashboard /home/horizon /var/www/cgi-bin/horizon \
     && cp /horizon/manage.py /var/lib/microservices/venv/bin/manage.py \
     && /var/lib/microservices/venv/bin/python /var/lib/microservices/venv/bin/manage.py collectstatic --noinput --clear \
     && chown -R horizon: /etc/openstack-dashboard /home/horizon /var/lib/microservices/venv/lib/python2.7/site-packages/static /horizon \
-    && /var/lib/microservices/venv/bin/python /var/lib/microservices/venv/bin/manage.py compress --force
+    && /var/lib/microservices/venv/bin/python /var/lib/microservices/venv/bin/manage.py compress --force \
+    && rm -rf /horizon /sahara-dashboard
 
 ENV PATH /var/lib/venv/bin:$PATH
 
