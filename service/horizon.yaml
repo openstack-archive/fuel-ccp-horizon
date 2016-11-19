@@ -6,10 +6,10 @@ service:
     - name: horizon
       image: horizon
       probes:
-        readiness: "true"
-        liveness:
-          command: "true"
-          type: "exec"
+        readiness:
+          type: "httpGet"
+          port: {{ horizon.port.cont }}
+          path: "/"
       volumes:
         - name: horizon-logs
           path: "/var/log/ccp/horizon"
