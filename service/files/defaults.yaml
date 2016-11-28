@@ -4,6 +4,7 @@ configs:
       cont: 80
       ingress: horizon
     secret_key: secret
+    images_upload_mode: legacy
 
     wsgi:
       processes: 6

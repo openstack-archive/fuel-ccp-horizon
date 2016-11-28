@@ -225,6 +225,11 @@ OPENSTACK_KEYSTONE_BACKEND = {
 LAUNCH_INSTANCE_LEGACY_ENABLED = False
 LAUNCH_INSTANCE_NG_ENABLED = True
 
+# "off" disables the ability to upload images via Horizon. "legacy" enables
+# local file upload by piping the image file through the Horizon?s web-server.
+# "direct" sends the image file directly from the web browser to Glance.
+HORIZON_IMAGES_UPLOAD_MODE = "{{ horizon.images_upload_mode }}"
+
 # A dictionary of settings which can be used to provide the default values for
 # properties found in the Launch Instance modal.
 #LAUNCH_INSTANCE_DEFAULTS = {
