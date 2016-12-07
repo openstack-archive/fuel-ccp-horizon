@@ -17,3 +17,6 @@ sources:
   openstack/sahara-dashboard:
     git_url: https://git.openstack.org/openstack/sahara-dashboard.git
     git_ref: stable/newton
+  openstack/murano-dashboard:
+    git_url: http://git.openstack.org/openstack/murano-dashboard.git
+    git_ref: stable/newton
