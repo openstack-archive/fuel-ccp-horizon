@@ -27,8 +27,7 @@ RUN mkdir -p /etc/openstack-dashboard /home/horizon /var/www/cgi-bin/horizon \
     && cp /horizon/manage.py /var/lib/microservices/venv/bin/manage.py \
     && /var/lib/microservices/venv/bin/python /var/lib/microservices/venv/bin/manage.py collectstatic --noinput --clear \
     && chown -R horizon: /etc/openstack-dashboard /home/horizon /var/lib/microservices/venv/lib/python2.7/site-packages/static /horizon \
-    && /var/lib/microservices/venv/bin/python /var/lib/microservices/venv/bin/manage.py compress --force \
-    && cd /home/horizon ; /var/lib/microservices/venv/bin/python /var/lib/microservices/venv/bin/manage.py migrate --noinput
+    && /var/lib/microservices/venv/bin/python /var/lib/microservices/venv/bin/manage.py compress --force
 
 ENV PATH /var/lib/venv/bin:$PATH
 
@@ -36,8 +35,7 @@ ENV PATH /var/lib/venv/bin:$PATH
 RUN sed -i "s#'../..'#os.path.realpath('../..')#" /var/lib/microservices/venv/lib/python2.7/site-packages/openstack_dashboard/wsgi/django.wsgi
 
 # TODO (amogylchenko): remove ugly sed for session_engine
-# Seems related to https://bugs.launchpad.net/murano/+bug/1465767
-RUN sed -i "s/^SESSION_ENGINE = .*/SESSION_ENGINE = 'django.contrib.sessions.backends.signed_cookies'/g" /var/lib/microservices/venv/lib/python2.7/site-packages/openstack_dashboard/local/local_settings.d/_50_murano.py
+RUN sed -i "s/^SESSION_ENGINE = .*/SESSION_ENGINE = 'django.contrib.sessions.backends.cache'/g" /var/lib/microservices/venv/lib/python2.7/site-packages/openstack_dashboard/local/local_settings.d/_50_murano.py
 
 COPY daemon.sh /usr/local/bin/daemon.sh
 COPY horizon_sudoers /etc/sudoers.d/horizon_sudoers
