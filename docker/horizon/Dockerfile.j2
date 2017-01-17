@@ -15,8 +15,10 @@ RUN apt-get update \
 RUN mkdir -p /etc/openstack-dashboard /home/horizon /var/www/cgi-bin/horizon \
     && cp -a /sahara-dashboard/sahara_dashboard/enabled/* /horizon/openstack_dashboard/local/enabled/ \
     && cp -a /searchlight-ui/searchlight_ui/enabled/_1001_project_search_panel.py /horizon/openstack_dashboard/local/enabled/ \
-    && cp -a /searchlight-ui/searchlight_ui/conf/searchlight_policy.json /horizon/openstack_dashboard/conf/ \
-    && cp -a /searchlight-ui/searchlight_ui/local_settings.d/_1001_search_settings.py /horizon/openstack_dashboard/local/local_settings.d/ \
+    && (if [ -f /searchlight-ui/searchlight_ui/conf/searchlight_policy.json ]; then \
+        cp -a /searchlight-ui/searchlight_ui/conf/searchlight_policy.json /horizon/openstack_dashboard/conf/; fi) \
+    && (if [ -f /searchlight-ui/searchlight_ui/local_settings.d/_1001_search_settings.py ]; then \
+        cp -a /searchlight-ui/searchlight_ui/local_settings.d/_1001_search_settings.py /horizon/openstack_dashboard/local/local_settings.d/; fi) \
     && /var/lib/microservices/venv/bin/pip install --upgrade /horizon /sahara-dashboard /murano-dashboard /searchlight-ui \
     && useradd --user-group horizon \
     && ln -s /etc/openstack-dashboard/local_settings /var/lib/microservices/venv/lib/python2.7/site-packages/openstack_dashboard/local/local_settings.py \
