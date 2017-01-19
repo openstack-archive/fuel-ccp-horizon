@@ -1,0 +1,40 @@
+# Rename this file to Dockerfile.j2 when building horizon for Mitaka.
+# (it's a workaround for murano-dashboard bug)
+
+FROM {{ image_spec("openstack-base") }}
+MAINTAINER {{ maintainer }}
+
+RUN apt-get update \
+    && apt-get install --no-install-recommends -q -y -o Dpkg::Options::="--force-confdef" -o Dpkg::Options::="--force-confold" \
+        apache2 \
+        libapache2-mod-wsgi \
+    && ln -s ../mods-available/headers.load /etc/apache2/mods-enabled/headers.load
+
+{{ copy_sources("openstack/horizon", "/horizon") }}
+{{ copy_sources("openstack/sahara-dashboard", "/sahara-dashboard") }}
+{{ copy_sources("openstack/searchlight-ui", "/searchlight-ui") }}
+
+RUN mkdir -p /etc/openstack-dashboard /home/horizon /var/www/cgi-bin/horizon \
+    && cp -a /sahara-dashboard/sahara_dashboard/enabled/* /horizon/openstack_dashboard/local/enabled/ \
+    && cp -a /searchlight-ui/searchlight_ui/enabled/_1001_project_search_panel.py /horizon/openstack_dashboard/local/enabled/ \
+    && (if [ -f /searchlight-ui/searchlight_ui/conf/searchlight_policy.json ]; then \
+        cp -a /searchlight-ui/searchlight_ui/conf/searchlight_policy.json /horizon/openstack_dashboard/conf/; fi) \
+    && (if [ -f /searchlight-ui/searchlight_ui/local_settings.d/_1001_search_settings.py ]; then \
+        cp -a /searchlight-ui/searchlight_ui/local_settings.d/_1001_search_settings.py /horizon/openstack_dashboard/local/local_settings.d/; fi) \
+    && useradd --user-group horizon \
+    && ln -s /etc/openstack-dashboard/local_settings /var/lib/microservices/venv/lib/python2.7/site-packages/openstack_dashboard/local/local_settings.py \
+    && cp -r /horizon/openstack_dashboard/conf/* /etc/openstack-dashboard/ \
+    && cp /horizon/manage.py /var/lib/microservices/venv/bin/manage.py \
+    && /var/lib/microservices/venv/bin/python /var/lib/microservices/venv/bin/manage.py collectstatic --noinput --clear \
+    && chown -R horizon: /etc/openstack-dashboard /home/horizon /var/lib/microservices/venv/lib/python2.7/site-packages/static /horizon \
+    && /var/lib/microservices/venv/bin/python /var/lib/microservices/venv/bin/manage.py compress --force
+
+ENV PATH /var/lib/venv/bin:$PATH
+
+# Workaround for https://bugs.launchpad.net/osprofiler/+bug/1361235
+RUN sed -i "s#'../..'#os.path.realpath('../..')#" /var/lib/microservices/venv/lib/python2.7/site-packages/openstack_dashboard/wsgi/django.wsgi
+
+COPY daemon.sh /usr/local/bin/daemon.sh
+COPY horizon_sudoers /etc/sudoers.d/horizon_sudoers
+RUN chmod 755 /usr/local/bin/daemon.sh \
+    && chmod 440 /etc/sudoers.d/horizon_sudoers
