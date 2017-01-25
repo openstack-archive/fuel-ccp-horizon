@@ -12,21 +12,23 @@ RUN apt-get update \
 {{ copy_sources("openstack/murano-dashboard", "/murano-dashboard") }}
 {{ copy_sources("openstack/searchlight-ui", "/searchlight-ui") }}
 
-RUN mkdir -p /etc/openstack-dashboard /home/horizon /var/www/cgi-bin/horizon \
+RUN mkdir -p /etc/openstack-dashboard /home/horizon /var/www/cgi-bin/horizon /var/lib/microservices/venv/lib/python2.7/site-packages/openstack_dashboard/local/local_settings.d \
+             /var/lib/microservices/venv/lib/python2.7/site-packages/openstack_dashboard/conf \
     && cp -a /sahara-dashboard/sahara_dashboard/enabled/* /horizon/openstack_dashboard/local/enabled/ \
     && cp -a /searchlight-ui/searchlight_ui/enabled/_1001_project_search_panel.py /horizon/openstack_dashboard/local/enabled/ \
     && (if [ -d /murano-dashboard/muranodashboard/conf ]; then \
-       cp -r /murano-dashboard/muranodashboard/conf/* /horizon/openstack_dashboard/conf/; fi) \
+       cp -r /murano-dashboard/muranodashboard/conf/* /var/lib/microservices/venv/lib/python2.7/site-packages/openstack_dashboard/conf/; fi) \
     && (if [ -d /murano-dashboard/muranodashboard/local/enabled ]; then \
         cp -a /murano-dashboard/muranodashboard/local/enabled/* /horizon/openstack_dashboard/local/enabled/; else \
         cp /murano-dashboard/muranodashboard/local/_50_murano.py /horizon/openstack_dashboard/local/enabled/;  fi) \
-    && (if [-d /murano-dashboard/muranodashboard/local/local_settings.d ]; then \
-       cp -a /murano-dashboard/muranodashboard/local/local_settings.d/* /horizon/openstack_dashboard/local/local_settings.d/ \
-       && sed -i "s/^SESSION_ENGINE = .*/SESSION_ENGINE = 'django.contrib.sessions.backends.cache'/g" /horizon/openstack_dashboard/local/local_settings.d/_50_murano.py; fi) \
+    && (if [ -d /murano-dashboard/muranodashboard/local/local_settings.d ]; then \
+       cp -a /murano-dashboard/muranodashboard/local/local_settings.d/* /var/lib/microservices/venv/lib/python2.7/site-packages/openstack_dashboard/local/local_settings.d/ \
+       && sed -i "s/^SESSION_ENGINE = .*/SESSION_ENGINE = 'django.contrib.sessions.backends.cache'/g" \
+          /var/lib/microservices/venv/lib/python2.7/site-packages/openstack_dashboard/local/local_settings.d/_50_murano.py; fi) \
     && (if [ -f /searchlight-ui/searchlight_ui/conf/searchlight_policy.json ]; then \
-        cp -a /searchlight-ui/searchlight_ui/conf/searchlight_policy.json /horizon/openstack_dashboard/conf/; fi) \
+        cp -a /searchlight-ui/searchlight_ui/conf/searchlight_policy.json /var/lib/microservices/venv/lib/python2.7/site-packages/openstack_dashboard/conf/; fi) \
     && (if [ -f /searchlight-ui/searchlight_ui/local_settings.d/_1001_search_settings.py ]; then \
-        cp -a /searchlight-ui/searchlight_ui/local_settings.d/_1001_search_settings.py /horizon/openstack_dashboard/local/local_settings.d/; fi) \
+        cp -a /searchlight-ui/searchlight_ui/local_settings.d/_1001_search_settings.py /var/lib/microservices/venv/lib/python2.7/site-packages/openstack_dashboard/local/local_settings.d/; fi) \
     && /var/lib/microservices/venv/bin/pip install --upgrade /horizon /sahara-dashboard /murano-dashboard /searchlight-ui \
     && useradd --user-group horizon \
     && ln -s /etc/openstack-dashboard/local_settings /var/lib/microservices/venv/lib/python2.7/site-packages/openstack_dashboard/local/local_settings.py \
@@ -34,7 +36,6 @@ RUN mkdir -p /etc/openstack-dashboard /home/horizon /var/www/cgi-bin/horizon \
     && cp /horizon/manage.py /var/lib/microservices/venv/bin/manage.py \
     && /var/lib/microservices/venv/bin/python /var/lib/microservices/venv/bin/manage.py collectstatic --noinput --clear \
     && chown -R horizon: /etc/openstack-dashboard /home/horizon /var/lib/microservices/venv/lib/python2.7/site-packages/static /horizon \
-    && /var/lib/microservices/venv/bin/python /var/lib/microservices/venv/bin/manage.py compress --force
 
 ENV PATH /var/lib/venv/bin:$PATH
 
