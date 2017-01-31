@@ -437,7 +437,8 @@ TIME_ZONE = "UTC"
 #    ('default', 'Default', 'themes/default'),
 #    ('material', 'Material', 'themes/material'),
 #]
-
+AVAILABLE_THEMES = [('mirantis', 'Mirantis', 'themes/vendor')]
+DEFAULT_THEME = "{{ horizon.theme }}"
 LOGGING = {
     'version': 1,
     # When set to True this will disable all logging except
