@@ -5,6 +5,7 @@ RUN apt-get update \
     && apt-get install --no-install-recommends -q -y -o Dpkg::Options::="--force-confdef" -o Dpkg::Options::="--force-confold" \
         apache2 \
         libapache2-mod-wsgi \
+    && touch /etc/apache2/ports.conf \
     && ln -s ../mods-available/headers.load /etc/apache2/mods-enabled/headers.load
 
 {{ copy_sources("openstack/horizon", "/horizon") }}
