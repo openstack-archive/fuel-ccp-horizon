@@ -149,7 +149,7 @@ EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
 #]
 
 OPENSTACK_HOST = "{{ address('keystone') }}"
-OPENSTACK_KEYSTONE_URL = "{{ address('keystone', keystone.public_port, with_scheme=True) }}/v3"
+OPENSTACK_KEYSTONE_URL = "{{ address('keystone', keystone.public_port, with_scheme=True, tls=True) }}/v3"
 OPENSTACK_KEYSTONE_DEFAULT_ROLE = "_member_"
 
 # Enables keystone web single-sign-on if set to True.
@@ -190,7 +190,7 @@ OPENSTACK_KEYSTONE_DEFAULT_ROLE = "_member_"
 #OPENSTACK_SSL_NO_VERIFY = True
 
 # The CA certificate to use to verify SSL connections
-#OPENSTACK_SSL_CACERT = '/path/to/cacert.pem'
+OPENSTACK_SSL_CACERT = '/etc/horizon/certs/ca-cert.pem'
 
 # The OPENSTACK_KEYSTONE_BACKEND settings can be used to identify the
 # capabilities of the auth backend for Keystone.
