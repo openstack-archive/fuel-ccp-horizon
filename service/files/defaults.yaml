@@ -1,5 +1,7 @@
 configs:
   horizon:
+    tls:
+      enabled: true
     port:
       cont: 80
       ingress: horizon
