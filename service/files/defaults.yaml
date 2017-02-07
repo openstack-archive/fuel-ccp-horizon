@@ -23,3 +23,6 @@ sources:
   openstack/searchlight-ui:
     git_url: https://git.openstack.org/openstack/searchlight-ui.git
     git_ref: stable/newton
+  openstack/designate-dashboard:
+    git_url: https://git.openstack.org/openstack/designate-dashboard.git
+    git_ref: stable/newton
