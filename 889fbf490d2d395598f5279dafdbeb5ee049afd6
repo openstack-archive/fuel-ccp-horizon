@@ -1,0 +1,12 @@
+Verified+1: Mirantis CCP CI <mirantis-fuel-ccp-ci@mirantis.com>
+Code-Review+1: Marek Zawadzki <mzawadzki@mirantis.com>
+Code-Review+1: Dmitry Klenov <dklenov@mirantis.com>
+Code-Review+2: Proskurin Kirill <kproskurin@mirantis.com>
+Code-Review+2: Andrey Pavlov <apavlov@mirantis.com>
+Workflow+1: Andrey Pavlov <apavlov@mirantis.com>
+Verified+2: Jenkins
+Submitted-by: Jenkins
+Submitted-at: Wed, 15 Feb 2017 10:18:42 +0000
+Reviewed-on: https://review.openstack.org/430220
+Project: openstack/fuel-ccp-horizon
+Branch: refs/heads/master
