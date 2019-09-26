@@ -1,9 +1,0 @@
-server {
-    listen {{ network_topology["private"]["address"] }}:{{ horizon.port.cont }} ssl;
-    include common/ssl.conf;
-
-    location / {
-        proxy_pass http://horizon;
-        include common/proxy-headers.conf;
-    }
-}

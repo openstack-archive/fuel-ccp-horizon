@@ -1,1 +1,0 @@
-%microservices ALL=(root) NOPASSWD: /bin/chown horizon\:horizon /var/log/ccp/horizon
